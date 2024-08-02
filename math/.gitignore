@@ -24,3 +24,5 @@ wiki
 data
 .cpcache
 errorconv*
+.clj-kondo
+.lsp
