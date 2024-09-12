@@ -2646,7 +2646,7 @@ Feel free to reply to this email if you need help.`;
   }
 
   function deleteSuzinvite(suzinvite: any) {
-    return new Promise(function (resolve: () => void, reject: any) {
+    return new Promise(function (resolve: (v: void) => void, reject: any) {
       pgQuery(
         "DELETE FROM suzinvites WHERE suzinvite = ($1);",
         [suzinvite],
@@ -2677,7 +2677,7 @@ Feel free to reply to this email if you need help.`;
 
   function createXidEntry(xid: any, owner: any, uid?: any) {
     return new Promise(function (
-      resolve: () => void,
+      resolve: (v: void) => void,
       reject: (arg0: Error) => void
     ) {
       pgQuery(
@@ -3508,7 +3508,10 @@ Email verified! You can close this tab or hit the back button.
     path: string,
     params: { [x: string]: any; conversation_id?: any; email?: any }
   ) {
-    return new Promise(function (resolve: () => void, reject: () => void) {
+    return new Promise(function (
+      resolve: (v: void) => void,
+      reject: () => void
+    ) {
       params = _.clone(params);
       let hash = params[HMAC_SIGNATURE_PARAM_NAME];
       delete params[HMAC_SIGNATURE_PARAM_NAME];
@@ -6505,7 +6508,7 @@ Email verified! You can close this tab or hit the back button.
     is_meta: boolean
   ) {
     return new Promise(function (
-      resolve: () => void,
+      resolve: (v: void) => void,
       reject: (arg0: any) => void
     ) {
       pgQuery(
@@ -6682,9 +6685,8 @@ Email verified! You can close this tab or hit the back button.
         if (newPid === -1) {
           const rows = await addParticipant(zid!, uid!);
           const ptpt = rows[0];
-          pid = ptpt.pid;
-          currentPid = pid;
-          return pid;
+          currentPid = ptpt.pid;
+          return currentPid;
         } else {
           return newPid;
         }
@@ -11744,12 +11746,13 @@ Thanks for using Polis!
     // let ALLOW_NON_FRIENDS_WHEN_EMPTY_SOCIAL_RESULT = true;
     let mod = 0; // for now, assume all conversations will show unmoderated and approved participants.
 
+    type PcaData = {
+      asPOJO: any;
+      consensus: { agree?: any; disagree?: any };
+      repness: { [x: string]: any };
+    };
     function getAuthorUidsOfFeaturedComments() {
-      return getPca(zid, 0).then(function (pcaData: {
-        asPOJO: any;
-        consensus: { agree?: any; disagree?: any };
-        repness: { [x: string]: any };
-      }) {
+      return getPca(zid, 0).then(function (pcaData: PcaData | undefined) {
         if (!pcaData) {
           return [];
         }

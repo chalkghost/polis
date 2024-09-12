@@ -63,10 +63,10 @@ const readPool = new Pool(readsPgConnection);
 
 // Same syntax as pg.client.query, but uses connection pool
 // Also takes care of calling 'done'.
-function queryImpl(pool: Pool, queryString?: any, ...args: undefined[]) {
+function queryImpl(pool: Pool, queryString?: any, ...args: any[]) {
   // variable arity depending on whether or not query has params (default to [])
   let params: never[] | undefined;
-  let callback: ((arg0: any, arg1?: undefined) => void) | undefined;
+  let callback: ((arg0: any, arg1?: any) => void) | undefined;
   if (isFunction(args[1])) {
     params = args[0];
     callback = args[1];
